@@ -1,0 +1,1866 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_comment": "BatchMaster-Toolkit manifest \u2014 single source of truth for all scripts across platforms.",
+  "repository": {
+    "name": "BatchMaster-Toolkit",
+    "url": "https://github.com/Anamicca23/BatchMaster-Toolkit",
+    "issues": "https://github.com/Anamicca23/BatchMaster-Toolkit/issues",
+    "license": "MIT",
+    "homepage": "https://github.com/Anamicca23/BatchMaster-Toolkit#readme"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-03-18",
+    "maintainer": "Anamicca23",
+    "total_scripts": 51,
+    "total_platforms": 3,
+    "platforms": [
+      "windows",
+      "macos",
+      "linux"
+    ],
+    "categories": [
+      "System-Diagnostics",
+      "Maintenance-Cleaning",
+      "Network-Tools",
+      "Security-Privacy",
+      "Utility-Scripts"
+    ],
+    "summary": {
+      "windows": 25,
+      "macos": 12,
+      "linux": 12
+    }
+  },
+  "risk_levels": {
+    "LOW": "Reads data only. No files modified, no settings changed.",
+    "MEDIUM": "Modifies cache or temp files. Changes are non-critical and easily reversible.",
+    "HIGH": "Modifies system settings, registry, or service configuration. Reversible with included undo option.",
+    "CRITICAL": "Permanently deletes files or makes irreversible system changes. Backup required before use."
+  },
+  "scripts": {
+    "windows": {
+      "System-Diagnostics": [
+        {
+          "file": "SystemInfo.bat",
+          "path": "windows/System-Diagnostics/SystemInfo.bat",
+          "version": "4.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "System-Diagnostics",
+          "description": "Full interactive analytics dashboard covering CPU, RAM, GPU, disk, battery, network, processes, startup programs, Windows license, and security \u2014 with live ASCII bar charts for CPU load and disk usage.",
+          "long_description": "14-section interactive menu. Uses WGet/WGetFull subroutines to strip wmic carriage-return artifacts for accurate data. Disk sizes computed via 9-digit string trim to avoid 32-bit set /a overflow. All output constrained to 120 columns.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1903",
+          "tags": [
+            "diagnostics",
+            "dashboard",
+            "analytics",
+            "cpu",
+            "ram",
+            "gpu",
+            "disk",
+            "battery",
+            "network"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "4.0.0": {
+              "date": "2025-03-18",
+              "notes": "Complete rewrite with WGet/WGetFull subroutines to fix wmic CR stripping. Added per-drive GB math, battery charge meter, and 120-col window scaling."
+            },
+            "3.0.0": {
+              "date": "2024-11-01",
+              "notes": "Added ASCII bar charts for CPU load and disk usage."
+            },
+            "2.0.0": {
+              "date": "2024-06-15",
+              "notes": "Added GPU, battery, and security sections."
+            },
+            "1.0.0": {
+              "date": "2024-01-01",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "BatteryGuard.bat",
+          "path": "windows/System-Diagnostics/BatteryGuard.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "System-Diagnostics",
+          "description": "Detailed battery health report showing wear level percentage, full charge capacity vs design capacity, estimated cycle count, and a color-coded health alert when capacity drops below 80%.",
+          "long_description": "Queries Win32_Battery via wmic. Calculates wear as (1 - FullChargeCapacity/DesignCapacity)*100. Generates a full HTML battery report via powercfg /batteryreport saved to the Desktop.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 8,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "battery",
+            "health",
+            "laptop",
+            "diagnostics"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "DriverChecker.bat",
+          "path": "windows/System-Diagnostics/DriverChecker.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "System-Diagnostics",
+          "description": "Lists all installed device drivers with version numbers, dates, and publisher. Flags drivers older than 12 months and any unsigned or unverified drivers.",
+          "long_description": "Uses wmic path win32_PnPSignedDriver to enumerate all drivers. Compares DriverDate against current date to identify stale drivers. Checks IsSigned field to flag unsigned drivers. Output sortable by date or name.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "drivers",
+            "diagnostics",
+            "hardware",
+            "updates"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "BootSpeedAnalyzer.bat",
+          "path": "windows/System-Diagnostics/BootSpeedAnalyzer.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "System-Diagnostics",
+          "description": "Reads Windows event log ID 100 (boot performance) and startup impact entries. Ranks which startup programs add the most seconds to boot time with suggestions to disable top offenders.",
+          "long_description": "Queries the Microsoft-Windows-Diagnostics-Performance operational log via wevtutil. Parses startup delay data from event ID 100 fields. Also reads HKLM startup registry keys and measures impact against known delay thresholds.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 20,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "boot",
+            "startup",
+            "performance",
+            "diagnostics"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "ThermalMonitor.bat",
+          "path": "windows/System-Diagnostics/ThermalMonitor.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "System-Diagnostics",
+          "description": "Live auto-refreshing loop reading CPU and disk temperatures via WMI MSAcpi_ThermalZoneTemperature. Color-coded warning when CPU exceeds 80\u00b0C.",
+          "long_description": "Polls wmic /namespace:\\root\\wmi PATH MSAcpi_ThermalZoneTemperature every 3 seconds. Converts raw decikelvin to Celsius. Warn threshold: 80\u00b0C (yellow), Critical threshold: 90\u00b0C (red). Compatible hardware required for WMI thermal support.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 999,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "temperature",
+            "thermal",
+            "hardware",
+            "monitoring",
+            "cpu"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Maintenance-Cleaning": [
+        {
+          "file": "DeepClean.bat",
+          "path": "windows/Maintenance-Cleaning/DeepClean.bat",
+          "version": "2.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Maintenance-Cleaning",
+          "description": "14-step system deep clean: temp folders, prefetch, thumbnails, DNS cache, all browser caches, Windows Update cache, recycle bin, error reports, event logs, and silent Disk Cleanup.",
+          "long_description": "Cleans: %TEMP%, C:\\Windows\\Temp, Prefetch, thumbcache_*.db, ipconfig /flushdns, IE/Edge WebCache, Edge/Chrome/Firefox code and GPU caches, SoftwareDistribution\\Download, Recycle Bin, WER directories, all event logs via wevtutil, and cleanmgr /sagerun:1.",
+          "requires_admin": true,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 120,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "clean",
+            "temp",
+            "cache",
+            "maintenance",
+            "disk",
+            "browser"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "2.0.0": {
+              "date": "2025-03-18",
+              "notes": "Added Firefox and Edge cache paths. Added event log clearing and silent Disk Cleanup."
+            },
+            "1.0.0": {
+              "date": "2024-01-01",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "RAMCleaner.bat",
+          "path": "windows/Maintenance-Cleaning/RAMCleaner.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Maintenance-Cleaning",
+          "description": "Clears Windows RAM standby list and forces working set trim. Displays before and after physical memory usage to measure actual freed RAM in MB.",
+          "long_description": "Uses PowerShell [System.GC]::Collect() and optionally RAMMap.exe -Ew if available. Reads TotalVisibleMemorySize and FreePhysicalMemory via wmic before and after to calculate freed memory. Safe to run on any running system.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "ram",
+            "memory",
+            "performance",
+            "clean"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "LargeFileFinder.bat",
+          "path": "windows/Maintenance-Cleaning/LargeFileFinder.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Maintenance-Cleaning",
+          "description": "Scans all logical drives for files over 100 MB. Ranked list sorted by descending size with full path, size in MB/GB, and last modified date.",
+          "long_description": "Uses forfiles /s /m *.* /c to recurse drives. Filters by size threshold. Converts bytes to human-readable MB/GB. Results sorted and displayed in a table. Output optionally saved to Desktop\\LargeFiles_report.txt.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 60,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "storage",
+            "disk",
+            "large-files",
+            "cleanup"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "DuplicateFinder.bat",
+          "path": "windows/Maintenance-Cleaning/DuplicateFinder.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Maintenance-Cleaning",
+          "description": "Recursively scans a folder for files sharing the same name and byte size. Lists all duplicate groups with full paths for manual review.",
+          "long_description": "Prompts for root folder. Uses dir /s /b to enumerate all files. Groups by filename+size hash. Displays duplicate groups with their full paths. Does NOT auto-delete \u2014 user reviews and removes manually.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 45,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "duplicates",
+            "storage",
+            "cleanup",
+            "files"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "RecycleBinManager.bat",
+          "path": "windows/Maintenance-Cleaning/RecycleBinManager.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Maintenance-Cleaning",
+          "description": "Shows recycle bin size per drive in MB and GB. Interactive menu to empty individual bins or all at once, with confirmation prompt before any deletion.",
+          "long_description": "Reads $Recycle.Bin on each logical drive. Calculates size with dir /s. Interactive menu: (1) list bins with sizes, (2) empty selected drive, (3) empty all. Requires Y/N confirmation before any deletion.",
+          "requires_admin": false,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "recycle-bin",
+            "storage",
+            "cleanup"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Network-Tools": [
+        {
+          "file": "NetworkOptimizer.bat",
+          "path": "windows/Network-Tools/NetworkOptimizer.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Network-Tools",
+          "description": "Full network tune-up: flush DNS, reset Winsock and TCP/IP stack, set fast DNS servers, disable throttling. Includes before/after ping latency comparison.",
+          "long_description": "Operations: ipconfig /flushdns, ipconfig /release + /renew, netsh winsock reset, netsh int ip reset, netsh int tcp set global (autotuninglevel, chimney, dca), registry key NetworkThrottlingIndex=0xFFFFFFFF, arp -d *, ipconfig /registerdns, DNS set to 8.8.8.8 + 1.1.1.1 on all active adapters. Includes undo option restoring DHCP DNS.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 30,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "network",
+            "dns",
+            "tcp",
+            "optimization",
+            "latency",
+            "winsock"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "WifiPasswordViewer.bat",
+          "path": "windows/Network-Tools/WifiPasswordViewer.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Network-Tools",
+          "description": "Enumerates all saved WiFi profiles and displays each network SSID with its stored plaintext password from the local Windows credential store.",
+          "long_description": "Uses netsh wlan show profiles to list all saved SSIDs. For each SSID runs netsh wlan show profile name='...' key=clear and parses the Key Content field. No external tools. Works only on the local machine \u2014 cannot read passwords from other devices.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "wifi",
+            "passwords",
+            "network",
+            "credentials"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "PortScanner.bat",
+          "path": "windows/Network-Tools/PortScanner.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Network-Tools",
+          "description": "Scans the 50 most common TCP/UDP ports on localhost. Reports open ports and maps each to its owning process name and PID.",
+          "long_description": "Uses netstat -ano to get listening sockets. For each open port, resolves process name via tasklist /fi PID. PowerShell Test-NetConnection used as fallback for UDP probing. Output table separates well-known ports (<1024) from ephemeral ports.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "ports",
+            "network",
+            "security",
+            "tcp",
+            "udp"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "NetworkSpeedLogger.bat",
+          "path": "windows/Network-Tools/NetworkSpeedLogger.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Network-Tools",
+          "description": "Pings 5 servers every 10 seconds for 5 minutes. Appends timestamped results to a latency log on the Desktop for trend analysis.",
+          "long_description": "Targets: Google DNS (8.8.8.8), Cloudflare (1.1.1.1), OpenDNS (208.67.222.222), Quad9 (9.9.9.9), Amazon (205.251.196.1). Each cycle pings all 5 targets and logs: timestamp, target, min/avg/max RTT, and packet loss percentage. Total run time: 5 minutes (30 cycles).",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 300,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "latency",
+            "ping",
+            "logging",
+            "network",
+            "monitoring"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "ConnectionKiller.bat",
+          "path": "windows/Network-Tools/ConnectionKiller.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Network-Tools",
+          "description": "Lists all established TCP connections with remote IP, port, and process name. Select by number to immediately terminate the owning process.",
+          "long_description": "Uses netstat -ano | findstr ESTABLISHED. Resolves PIDs to process names via tasklist. Numbers each connection for selection. Terminates selected connection via taskkill /f /pid. Requires Y confirmation before kill. Refreshes list after termination.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": false,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "connections",
+            "tcp",
+            "network",
+            "processes",
+            "terminate"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Security-Privacy": [
+        {
+          "file": "PrivacyGuard.bat",
+          "path": "windows/Security-Privacy/PrivacyGuard.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Security-Privacy",
+          "description": "Disables Windows telemetry services, Cortana tracking, advertising ID, WER, and CEIP via registry. Blocks tracking domains in hosts file. Fully reversible.",
+          "long_description": "Disables: DiagTrack and dmwappushservice services, AllowTelemetry=0, DisableAdvertisingId=1, AllowCortana=0, DoNotShowFeedbackNotifications=1, WER disabled, CEIP opt-out. Appends ~30 known Microsoft telemetry endpoints to C:\\Windows\\System32\\drivers\\etc\\hosts. Option [2] fully restores all defaults.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "privacy",
+            "telemetry",
+            "security",
+            "hosts",
+            "cortana",
+            "tracking"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "AccountAuditor.bat",
+          "path": "windows/Security-Privacy/AccountAuditor.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Security-Privacy",
+          "description": "Lists all local user accounts with last login timestamp, status, and password age. Flags unused accounts and those with blank or expired passwords.",
+          "long_description": "Uses net user and wmic useraccount. Reads LastLogon, PasswordLastSet, AccountType, Disabled flags. Flags: never-logged-in accounts, accounts with PasswordRequired=False, accounts inactive for 90+ days, and built-in Administrator if enabled.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "accounts",
+            "security",
+            "audit",
+            "users",
+            "passwords"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "AutorunAuditor.bat",
+          "path": "windows/Security-Privacy/AutorunAuditor.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Security-Privacy",
+          "description": "Scans 12 autorun registry keys and all startup folders. Flags entries pointing to temp directories, missing paths, or AppData locations used by malware.",
+          "long_description": "Scans: HKCU/HKLM Run, RunOnce, RunServices, RunServicesOnce. Also scans %APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup and the All Users equivalent. For each entry: checks if path exists, flags paths in %TEMP%, %APPDATA%, Downloads. Displays full registry key path for manual removal.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "autorun",
+            "startup",
+            "security",
+            "registry",
+            "malware",
+            "persistence"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "SuspiciousProcessHunter.bat",
+          "path": "windows/Security-Privacy/SuspiciousProcessHunter.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Security-Privacy",
+          "description": "Scans all running processes and flags any executing from %TEMP%, %APPDATA%, %LOCALAPPDATA%, Downloads, or other non-standard locations.",
+          "long_description": "Iterates all processes via wmic process get Name,ExecutablePath,ProcessId. For each path checks against a suspicious-location list: Temp, AppData\\Local, AppData\\Roaming, Downloads, Desktop, Public. Also flags processes with no path (injected threads), processes masquerading as system names from wrong directories.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "processes",
+            "malware",
+            "security",
+            "monitoring",
+            "threat-hunting"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Utility-Scripts": [
+        {
+          "file": "GameBoost.bat",
+          "path": "windows/Utility-Scripts/GameBoost.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "Pre-gaming optimizer: kills background apps, sets High Performance power plan, disables update scanning, boosts network latency. Includes full Restore option.",
+          "long_description": "Boost: kills 13 background processes (OneDrive, Teams, Slack, Discord, Spotify, etc.), powercfg /setactive High-Performance GUID, stops wuauserv + bits, Set-MpPreference -DisableRealtimeMonitoring $true, sets TcpAckFrequency=1 + TCPNoDelay=1, Win32PrioritySeparation=38. Restore: reverses all 6 changes with exact original values.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "gaming",
+            "performance",
+            "optimization",
+            "network",
+            "power-plan"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "FileOrganizer.bat",
+          "path": "windows/Utility-Scripts/FileOrganizer.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "Moves all files in a folder into typed subfolders by extension: Images, Documents, Videos, Music, Archives, Others.",
+          "long_description": "Extension mapping \u2014 Images: jpg,jpeg,png,gif,bmp,webp,svg,ico,tiff; Documents: pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,md,odt; Videos: mp4,mkv,avi,mov,wmv,flv,m4v; Music: mp3,flac,wav,aac,ogg,wma,m4a; Archives: zip,rar,7z,tar,gz,bz2,xz. All other extensions go to Others. Shows count of files moved per category.",
+          "requires_admin": false,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "files",
+            "organization",
+            "utility",
+            "automation"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "FolderBackup.bat",
+          "path": "windows/Utility-Scripts/FolderBackup.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "Interactive backup: prompts for source and destination, creates a BACKUP_YYYYMMDD_HHMMSS subfolder, copies recursively with retry logic and live progress counter.",
+          "long_description": "Uses robocopy /e /r:3 /w:5 /np /tee for reliable recursive copy with 3 retries and 5-second waits. Creates timestamped destination subfolder. Logs output to backup_log.txt alongside the backup. Prints file count and total size on completion.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 0,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "backup",
+            "files",
+            "utility",
+            "robocopy"
+          ],
+          "dependencies": [
+            "robocopy"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "AppInstaller.bat",
+          "path": "windows/Utility-Scripts/AppInstaller.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "Silent bulk installer via winget. Checks if already installed before proceeding. Installs Chrome, VLC, 7-Zip, Notepad++, and VS Code. Logs results to Desktop.",
+          "long_description": "For each app: runs winget list --id <package_id> to check if installed. If not, runs winget install --id <package_id> --silent --accept-package-agreements --accept-source-agreements. Package IDs: Google.Chrome, VideoLAN.VLC, 7zip.7zip, Notepad++.Notepad++, Microsoft.VisualStudioCode. Results logged to Desktop\\install_log.txt.",
+          "requires_admin": true,
+          "risk_level": "MEDIUM",
+          "reversible": true,
+          "estimated_runtime_seconds": 180,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1809",
+          "tags": [
+            "apps",
+            "winget",
+            "install",
+            "setup",
+            "automation"
+          ],
+          "dependencies": [
+            "winget"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "PCHealthScore.bat",
+          "path": "windows/Utility-Scripts/PCHealthScore.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "10 weighted diagnostic checks produce a health score out of 100 with a letter grade and specific improvement recommendations.",
+          "long_description": "Checks and weights: RAM usage free >50% (20pts), C: drive >20% free (20pts), CPU load <70% (15pts), battery >50% (10pts), Firewall enabled (10pts), Defender running (10pts), listening ports <20 (5pts), startup items <10 (5pts), no pending Windows Update (3pts), uptime <7 days (2pts). Grade: A=90+, B=80+, C=70+, D=60+, F=<60.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 30,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "health",
+            "diagnostics",
+            "score",
+            "benchmark",
+            "audit"
+          ],
+          "dependencies": [],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "SystemBenchmark.bat",
+          "path": "windows/Utility-Scripts/SystemBenchmark.bat",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "windows",
+          "category": "Utility-Scripts",
+          "description": "Benchmarks CPU arithmetic, disk read/write, and RAM throughput. Results table with five-tier performance rating.",
+          "long_description": "CPU: timed loop counting iterations/second. Disk: fsutil creates 500 MB test file, measures write MB/s and read MB/s, then deletes test file. RAM: PowerShell array copy speed test. Tiers: Entry (<index 20), Mid-Range (20-40), Good (40-60), High-End (60-80), Enthusiast (80+). All temp files auto-deleted after test.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 60,
+          "tested_on": [
+            "Windows 10 22H2",
+            "Windows 11 23H2"
+          ],
+          "min_os_version": "Windows 10 1803",
+          "tags": [
+            "benchmark",
+            "performance",
+            "cpu",
+            "disk",
+            "ram"
+          ],
+          "dependencies": [
+            "fsutil",
+            "powershell"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ]
+    },
+    "macos": {
+      "System-Diagnostics": [
+        {
+          "file": "system_info.sh",
+          "path": "macos/System-Diagnostics/system_info.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "System-Diagnostics",
+          "description": "Full system snapshot via system_profiler, sysctl, vm_stat, df, and ioreg. CPU, RAM, GPU, disk, battery, and uptime in a formatted terminal dashboard.",
+          "long_description": "Sources: system_profiler SPHardwareDataType (CPU/RAM/serial), sysctl hw.memsize + kern.version, vm_stat (page calculations for used/free RAM), df -h (disk), system_profiler SPDisplaysDataType (GPU), ioreg -rn AppleSmartBattery (battery/MacBook only). Uptime via sysctl kern.boottime.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 8,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "diagnostics",
+            "dashboard",
+            "system-info",
+            "macos"
+          ],
+          "dependencies": [
+            "system_profiler",
+            "sysctl",
+            "df",
+            "ioreg"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "battery_health.sh",
+          "path": "macos/System-Diagnostics/battery_health.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "System-Diagnostics",
+          "description": "Reads battery cycle count, condition, max and design capacity from ioreg. Calculates wear % and flags batteries past 20% or 40% wear.",
+          "long_description": "Extracts from ioreg -rn AppleSmartBattery: CycleCount, Condition, AppleRawMaxCapacity, DesignCapacity. Wear% = (1 - MaxCapacity/DesignCapacity)*100. Thresholds: >20% = Degraded (yellow), >40% = Replace Soon (red). Apple's official threshold for service is 80% worn (i.e. 80% capacity remaining).",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 3,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "battery",
+            "health",
+            "laptop",
+            "macos",
+            "ioreg"
+          ],
+          "dependencies": [
+            "ioreg"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "disk_health.sh",
+          "path": "macos/System-Diagnostics/disk_health.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "System-Diagnostics",
+          "description": "Runs diskutil on all physical disks. Reports SMART status, partition scheme, file system, and capacity. If smartmontools installed, reads full SMART attribute table.",
+          "long_description": "diskutil list enumerates all physical disks. diskutil info /dev/diskN extracts: MediaType, SmartStatus, PartitionMapType, FilesystemType, MediaName, Size. If smartctl is available (brew install smartmontools), reads SMART attributes: ID 5 (reallocated sectors), ID 187 (uncorrectable errors), ID 194 (temperature), ID 9 (power-on hours).",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "disk",
+            "health",
+            "smart",
+            "macos",
+            "storage"
+          ],
+          "dependencies": [
+            "diskutil",
+            "smartctl (optional, brew install smartmontools)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Maintenance-Cleaning": [
+        {
+          "file": "deep_clean.sh",
+          "path": "macos/Maintenance-Cleaning/deep_clean.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Maintenance-Cleaning",
+          "description": "Clears ~/Library/Caches, flushes DNS, rebuilds Spotlight index, runs Homebrew cleanup if installed, removes crash logs, purges memory, empties Trash.",
+          "long_description": "Steps: rm -rf ~/Library/Caches/* (user cache), dscacheutil -flushcache + killall -HUP mDNSResponder (DNS), sudo mdutil -E / (Spotlight rebuild), brew cleanup --prune=all + autoremove (if brew installed), rm -rf ~/Library/Logs/*.crash (crash logs), sudo purge (RAM), osascript to empty Trash. Reports reclaimed space before and after.",
+          "requires_admin": true,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 60,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "clean",
+            "cache",
+            "maintenance",
+            "macos",
+            "homebrew"
+          ],
+          "dependencies": [
+            "dscacheutil",
+            "mdutil",
+            "brew (optional)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "brew_maintenance.sh",
+          "path": "macos/Maintenance-Cleaning/brew_maintenance.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Maintenance-Cleaning",
+          "description": "Full Homebrew maintenance cycle: update, upgrade formulae and casks, cleanup --prune=all, autoremove unused deps, doctor. Reports reclaimed space.",
+          "long_description": "Sequence: brew update (refresh index), brew upgrade (all formulae), brew upgrade --cask (all casks), brew cleanup --prune=all (remove all old versions and downloads), brew autoremove (unused leaf dependencies), brew doctor (configuration health). Measures df -h before and after to report reclaimed space.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 120,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "homebrew",
+            "brew",
+            "maintenance",
+            "packages",
+            "macos"
+          ],
+          "dependencies": [
+            "brew"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "large_file_finder.sh",
+          "path": "macos/Maintenance-Cleaning/large_file_finder.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Maintenance-Cleaning",
+          "description": "Finds files over 500 MB on the full filesystem, excluding /System, /dev, /private/var/vm. Sorted list with human-readable sizes.",
+          "long_description": "find / -size +500M -not -path '/System/*' -not -path '/dev/*' -not -path '/private/var/vm/*' -not -path '/Library/Developer/*' 2>/dev/null. Pipes to du -sh for human-readable sizes. Sorted by size descending with sort -rh. Excludes Xcode simulator runtimes by default (configurable).",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 30,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "storage",
+            "disk",
+            "large-files",
+            "macos",
+            "cleanup"
+          ],
+          "dependencies": [
+            "find",
+            "du",
+            "sort"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Network-Tools": [
+        {
+          "file": "network_optimizer.sh",
+          "path": "macos/Network-Tools/network_optimizer.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Network-Tools",
+          "description": "Flushes DNS cache, renews DHCP lease, removes stale network prefs, sets Cloudflare + Google DNS on all active interfaces.",
+          "long_description": "DNS flush: dscacheutil -flushcache + sudo killall -HUP mDNSResponder. DHCP: ipconfig set <interface> DHCP. Stale prefs: removes /Library/Preferences/SystemConfiguration/*.plist (network preferences, not entire SystemConfiguration). DNS set via networksetup -setdnsservers <interface> 1.1.1.1 8.8.8.8 for all active interfaces. Includes undo restoring DHCP auto DNS.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "network",
+            "dns",
+            "dhcp",
+            "optimization",
+            "macos"
+          ],
+          "dependencies": [
+            "networksetup",
+            "ipconfig",
+            "dscacheutil"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "wifi_passwords.sh",
+          "path": "macos/Network-Tools/wifi_passwords.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Network-Tools",
+          "description": "Lists all saved WiFi SSIDs and retrieves stored passwords from the macOS Keychain. Each lookup triggers a system authentication prompt.",
+          "long_description": "networksetup -listpreferredwirelessnetworks <interface> to enumerate SSIDs. For each SSID: security find-generic-password -D 'AirPort network password' -a <SSID> -w. macOS shows a system dialog for each lookup requiring the user's login password or Touch ID. Passwords are printed to stdout only \u2014 never written to a file.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "wifi",
+            "passwords",
+            "network",
+            "keychain",
+            "macos"
+          ],
+          "dependencies": [
+            "security",
+            "networksetup"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "port_scanner.sh",
+          "path": "macos/Network-Tools/port_scanner.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Network-Tools",
+          "description": "Scans localhost for open TCP/UDP ports via nmap (if installed) or nc fallback. Maps each port to its process via lsof -i.",
+          "long_description": "If nmap installed: nmap -sV -p 1-65535 localhost (full scan with service detection). If not: manual loop using nc -z -w 1 for top 50 common ports. lsof -i -P -n | grep LISTEN resolves process ownership. Distinguishes privileged ports (<1024) from application ports. Output table: Port | Protocol | State | Service | Process | PID.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 20,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "ports",
+            "network",
+            "security",
+            "nmap",
+            "macos"
+          ],
+          "dependencies": [
+            "lsof",
+            "nmap (optional, brew install nmap)",
+            "nc"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Security-Privacy": [
+        {
+          "file": "privacy_guard.sh",
+          "path": "macos/Security-Privacy/privacy_guard.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Security-Privacy",
+          "description": "Disables macOS telemetry, Safari suggestions, Spotlight Siri data sharing, and analytics sharing. Optionally blocks Apple analytics domains in hosts file.",
+          "long_description": "defaults write commands: com.apple.Safari UniversalSearchEnabled=0, SuppressSearchSuggestions=1; com.apple.assistant.support 'Search Queries Data Sharing Status'=2; /Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist AutoSubmit=false. launchctl unload com.apple.SubmitDiagInfo. Optional hosts append for ~20 Apple analytics endpoints. Restore option re-enables all.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "privacy",
+            "telemetry",
+            "security",
+            "macos",
+            "analytics"
+          ],
+          "dependencies": [
+            "defaults",
+            "launchctl"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "firewall_manager.sh",
+          "path": "macos/Security-Privacy/firewall_manager.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Security-Privacy",
+          "description": "Manages the macOS Application Firewall: enable/disable, stealth mode, list rules, add/remove app rules.",
+          "long_description": "Uses /usr/libexec/ApplicationFirewall/socketfilterfw. Options: --setglobalstate on/off (enable firewall), --setstealthmode on (block ICMP/ping), --listapps (show all rules), --add /path/to/app + --blockapp/--unblockapp, --getglobalstate (status check). Prints final ruleset after each change for confirmation.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "firewall",
+            "security",
+            "macos",
+            "network"
+          ],
+          "dependencies": [
+            "socketfilterfw"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "gatekeeper_check.sh",
+          "path": "macos/Security-Privacy/gatekeeper_check.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Security-Privacy",
+          "description": "Reports Gatekeeper and SIP status. Lists quarantined files via xattr. Shows recently added Launch Agents and Daemons.",
+          "long_description": "spctl --status (Gatekeeper assess state). csrutil status (SIP: enabled/disabled). xattr -r -l / 2>/dev/null | grep com.apple.quarantine (quarantined items, may be slow). ls -lt ~/Library/LaunchAgents /Library/LaunchAgents /Library/LaunchDaemons | head -20 (recently added launch items). Flags any Launch Agent added in last 7 days.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "gatekeeper",
+            "sip",
+            "security",
+            "macos",
+            "quarantine"
+          ],
+          "dependencies": [
+            "spctl",
+            "csrutil",
+            "xattr"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Utility-Scripts": [
+        {
+          "file": "screenshot_renamer.sh",
+          "path": "macos/Utility-Scripts/screenshot_renamer.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "macos",
+          "category": "Utility-Scripts",
+          "description": "Watches ~/Desktop (or configured Screenshots folder) and auto-renames new screenshots with date-time instead of default 'Screenshot YYYY-MM-DD at HH.MM.SS' format.",
+          "long_description": "Uses fswatch (brew install fswatch) to watch the screenshots directory. On new file matching 'Screenshot *.png', renames it to YYYYMMDD_HHMMSS_screenshot.png. Configurable: target folder, output naming pattern, move to ~/Pictures/Screenshots archive. Runs as a background daemon.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 999,
+          "tested_on": [
+            "macOS 13 Ventura",
+            "macOS 14 Sonoma"
+          ],
+          "min_os_version": "macOS 12 Monterey",
+          "tags": [
+            "screenshots",
+            "automation",
+            "files",
+            "macos",
+            "utility"
+          ],
+          "dependencies": [
+            "fswatch (brew install fswatch)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ]
+    },
+    "linux": {
+      "System-Diagnostics": [
+        {
+          "file": "system_info.sh",
+          "path": "linux/System-Diagnostics/system_info.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "System-Diagnostics",
+          "description": "Dashboard from lscpu, free -h, df -h, lsblk, lspci, hostnamectl, and uptime in a clean formatted terminal report.",
+          "long_description": "Sections: OS (hostnamectl), Kernel (uname -r), CPU (lscpu: model, cores, threads, MHz), RAM (free -h: total/used/free/available), Disk (df -h filtered to physical mounts + lsblk tree view), GPU (lspci | grep -i vga/3d/display), Network (ip addr show active interfaces), Uptime (uptime -p).",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 3,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "diagnostics",
+            "dashboard",
+            "linux",
+            "system-info"
+          ],
+          "dependencies": [
+            "lscpu",
+            "free",
+            "df",
+            "lsblk",
+            "lspci",
+            "hostnamectl",
+            "ip"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "hardware_report.sh",
+          "path": "linux/System-Diagnostics/hardware_report.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "System-Diagnostics",
+          "description": "Full hardware inventory via dmidecode, lshw, and inxi. Saves timestamped report to ~/hardware_report_YYYYMMDD.txt.",
+          "long_description": "dmidecode -t 0,1,2,4,17 (BIOS, system, baseboard, processor, memory devices). lshw -short (full device tree in short format). inxi -Fxxxz (if installed: full system info with -z to hide private data). All output combined and saved to ~/hardware_report_$(date +%Y%m%d).txt. Installs inxi if missing and user consents.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "hardware",
+            "diagnostics",
+            "linux",
+            "inventory"
+          ],
+          "dependencies": [
+            "dmidecode",
+            "lshw",
+            "inxi (optional, apt install inxi)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "thermal_monitor.sh",
+          "path": "linux/System-Diagnostics/thermal_monitor.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "System-Diagnostics",
+          "description": "Live 5-second refresh CPU temperature monitor from /sys/class/thermal and lm-sensors. Color-coded warnings at 80\u00b0C and 90\u00b0C.",
+          "long_description": "Reads /sys/class/thermal/thermal_zone*/temp (divide by 1000 for Celsius). Also runs sensors (lm-sensors) if installed for per-core and per-package readings. Refresh: watch -n 5 equivalent via loop + clear. Color: normal=green, >80\u00b0C=yellow, >90\u00b0C=red (ANSI escape codes). CTRL+C to exit.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 999,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "temperature",
+            "thermal",
+            "monitoring",
+            "linux",
+            "cpu"
+          ],
+          "dependencies": [
+            "sensors (optional, apt install lm-sensors)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Maintenance-Cleaning": [
+        {
+          "file": "deep_clean.sh",
+          "path": "linux/Maintenance-Cleaning/deep_clean.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Maintenance-Cleaning",
+          "description": "Multi-stage deep clean: apt cache, ~/.cache, /tmp, systemd journal, thumbnail cache, and redundant snap revisions. Reports reclaimed space at each step.",
+          "long_description": "Steps with reclaimed space reporting: apt autoremove -y + apt clean (package cache), rm -rf ~/.cache/* (user cache, excludes ~/.cache/mozilla and active browser sessions), find /tmp /var/tmp -atime +3 -delete (temp files unused 3+ days), journalctl --vacuum-size=100M (journal trim), rm -rf ~/.cache/thumbnails/* (thumbnails), snap list --all + remove old revisions (keeps 2 latest). Total space summary at end.",
+          "requires_admin": true,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 45,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "clean",
+            "apt",
+            "cache",
+            "maintenance",
+            "linux",
+            "snap"
+          ],
+          "dependencies": [
+            "apt",
+            "journalctl",
+            "snap (optional)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "log_cleaner.sh",
+          "path": "linux/Maintenance-Cleaning/log_cleaner.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Maintenance-Cleaning",
+          "description": "Cleans system logs older than 7 days: journalctl vacuum, rotated .gz and .1 log files in /var/log. Does not touch active log files.",
+          "long_description": "journalctl --vacuum-time=7d (removes journal entries >7 days). find /var/log -name '*.gz' -o -name '*.1' -o -name '*.old' -mtime +7 -delete (rotated archived logs). Reports disk used by /var/log before and after. Excludes: /var/log/journal (handled by journalctl), /var/log/auth.log (security audit trail), /var/log/syslog (current).",
+          "requires_admin": true,
+          "risk_level": "MEDIUM",
+          "reversible": false,
+          "estimated_runtime_seconds": 15,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "logs",
+            "cleanup",
+            "maintenance",
+            "linux",
+            "journalctl"
+          ],
+          "dependencies": [
+            "journalctl"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "orphan_cleaner.sh",
+          "path": "linux/Maintenance-Cleaning/orphan_cleaner.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Maintenance-Cleaning",
+          "description": "Removes orphaned packages via deborphan, unused older kernels (keeps current + 1), and broken symlinks in /usr/local.",
+          "long_description": "deborphan (auto-installs if missing) identifies packages with no reverse dependencies. apt purge on confirmed list with user review step. Kernel cleanup: dpkg --list 'linux-image-*' identifies all installed kernels; uname -r identifies current; removes all others except the one immediately prior. find /usr/local -xtype l to list broken symlinks (listed for review, not auto-removed).",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": false,
+          "estimated_runtime_seconds": 30,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "orphans",
+            "packages",
+            "kernels",
+            "cleanup",
+            "linux"
+          ],
+          "dependencies": [
+            "deborphan (auto-installed)",
+            "apt"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Network-Tools": [
+        {
+          "file": "network_optimizer.sh",
+          "path": "linux/Network-Tools/network_optimizer.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Network-Tools",
+          "description": "Flushes systemd-resolved DNS, restarts network interface, sets Google/Cloudflare DNS in /etc/resolv.conf, runs latency test.",
+          "long_description": "resolvectl flush-caches (systemd-resolved) or /etc/init.d/dns-clean flush (legacy). ip link set <iface> down; sleep 2; ip link set <iface> up (restarts active interface). Writes 'nameserver 1.1.1.1' and 'nameserver 8.8.8.8' to /etc/resolv.conf (backs up original first). Ping test to 4 targets post-optimization. Restore option uses backed-up resolv.conf.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 20,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "network",
+            "dns",
+            "optimization",
+            "linux",
+            "resolvectl"
+          ],
+          "dependencies": [
+            "resolvectl",
+            "ip",
+            "ping"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "port_scanner.sh",
+          "path": "linux/Network-Tools/port_scanner.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Network-Tools",
+          "description": "Uses ss -tulnp to list all listening ports with owning processes. Optional nmap scan for service version detection.",
+          "long_description": "ss -tulnp (TCP+UDP, listening only, numeric ports, process info). Parses output into clean table: Port | Protocol | State | Process | PID. System ports (<1024) labeled separately from application ports. If nmap installed: optional nmap -sV localhost for service version detection. Highlights unusual ports that don't match known service names.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 5,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "ports",
+            "network",
+            "security",
+            "linux",
+            "ss",
+            "nmap"
+          ],
+          "dependencies": [
+            "ss",
+            "nmap (optional, apt install nmap)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "bandwidth_monitor.sh",
+          "path": "linux/Network-Tools/bandwidth_monitor.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Network-Tools",
+          "description": "Real-time bandwidth monitor. Uses nethogs, iftop, or vnstat in preference order. Falls back to /proc/net/dev polling.",
+          "long_description": "Detection order: command -v nethogs (per-process RX/TX, best), command -v iftop (per-connection), command -v vnstat (historical stats). If none: reads /proc/net/dev every 1 second, calculates delta RX/TX bytes, converts to KB/s or MB/s per interface. Offers to install nethogs via apt if not present. All tools run interactively (full terminal takeover).",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 999,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "bandwidth",
+            "network",
+            "monitoring",
+            "linux",
+            "nethogs"
+          ],
+          "dependencies": [
+            "nethogs (preferred)",
+            "iftop (alternative)",
+            "vnstat (alternative)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Security-Privacy": [
+        {
+          "file": "privacy_guard.sh",
+          "path": "linux/Security-Privacy/privacy_guard.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Security-Privacy",
+          "description": "Disables and masks whoopsie, apport, avahi-daemon, and cups. Appends ad/tracker domain blocks to /etc/hosts.",
+          "long_description": "systemctl disable --now whoopsie apport avahi-daemon cups (if cups not required). systemctl mask whoopsie apport (prevents re-enable). Backs up /etc/hosts to /etc/hosts.bak. Appends ~100 ad/tracker domains sourced from StevenBlack hosts list. Restore option: systemctl unmask + start stopped services, restore /etc/hosts from backup.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "privacy",
+            "telemetry",
+            "security",
+            "linux",
+            "hosts"
+          ],
+          "dependencies": [
+            "systemctl"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "ufw_setup.sh",
+          "path": "linux/Security-Privacy/ufw_setup.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Security-Privacy",
+          "description": "Configures UFW with secure defaults: deny all incoming, allow outgoing, SSH from local subnet only, logging on.",
+          "long_description": "ufw reset (clean state). ufw default deny incoming. ufw default allow outgoing. ufw allow from 192.168.0.0/24 to any port 22 (SSH local subnet only). ufw limit 22/tcp (rate-limit SSH for brute-force protection). ufw logging on. ufw enable. ufw status verbose (print final ruleset). Installs ufw via apt if not present.",
+          "requires_admin": true,
+          "risk_level": "HIGH",
+          "reversible": true,
+          "estimated_runtime_seconds": 10,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "firewall",
+            "ufw",
+            "security",
+            "linux",
+            "ssh"
+          ],
+          "dependencies": [
+            "ufw (auto-installed if missing)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        },
+        {
+          "file": "rootkit_scan.sh",
+          "path": "linux/Security-Privacy/rootkit_scan.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Security-Privacy",
+          "description": "Installs rkhunter and chkrootkit if missing, runs both scanners, combines output into a timestamped report at ~/security_scan_YYYYMMDD_HHMMSS.txt.",
+          "long_description": "apt install rkhunter chkrootkit -y (if missing). rkhunter --update + rkhunter --check --skip-keypress --report-warnings-only. chkrootkit -q (quiet mode, shows only findings). Combines both outputs into a single report file. grep -E 'WARNING|INFECTED|FOUND' on the report and prints highlights to terminal in red. Report path printed at end.",
+          "requires_admin": true,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 120,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "rootkit",
+            "malware",
+            "security",
+            "linux",
+            "rkhunter",
+            "chkrootkit"
+          ],
+          "dependencies": [
+            "rkhunter (auto-installed)",
+            "chkrootkit (auto-installed)"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ],
+      "Utility-Scripts": [
+        {
+          "file": "folder_backup.sh",
+          "path": "linux/Utility-Scripts/folder_backup.sh",
+          "version": "1.0.0",
+          "status": "stable",
+          "platform": "linux",
+          "category": "Utility-Scripts",
+          "description": "Interactive rsync backup: prompts for source and destination, creates a timestamped backup folder, shows live progress and total size on completion.",
+          "long_description": "rsync -avh --progress --stats <source> <dest>/BACKUP_$(date +%Y%m%d_%H%M%S)/. --exclude='.git' --exclude='node_modules' --exclude='*.tmp'. Prints transfer speed, total files, and total size from rsync --stats output. Logs rsync output to backup_YYYYMMDD.log alongside backup. Compares source and dest file counts as verification step.",
+          "requires_admin": false,
+          "risk_level": "LOW",
+          "reversible": true,
+          "estimated_runtime_seconds": 0,
+          "tested_on": [
+            "Ubuntu 22.04 LTS",
+            "Debian 12 Bookworm"
+          ],
+          "min_os_version": "Ubuntu 20.04 / Debian 11",
+          "tags": [
+            "backup",
+            "files",
+            "utility",
+            "rsync",
+            "linux"
+          ],
+          "dependencies": [
+            "rsync"
+          ],
+          "changelog": {
+            "1.0.0": {
+              "date": "2025-03-18",
+              "notes": "Initial release."
+            }
+          }
+        }
+      ]
+    }
+  }
+}
