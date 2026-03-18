@@ -242,7 +242,7 @@ BatchMaster-Toolkit/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/BatchMaster-Toolkit.git
+git clone https://github.com/Anamicca23/BatchMaster-Toolkit.git
 cd BatchMaster-Toolkit
 ```
 
